@@ -1,77 +1,144 @@
-<!doctype html> 
-<html lang="en"> 
+<!doctype html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <title>MRMRS Gifolio</title>
   <meta name="author" content="Adam Morse">
   <meta name="description" content="Gif Portfolio of mrmrs">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!--<link rel="icon" href="http://jxnblk.com/favicon.png" />-->
-  <!--  <link rel="apple-touch-icon-precomposed" href="http://jxnblk.com/apple-touch-icon.png" />-->
   <link rel="stylesheet" href="style.css">
   <style>
-    html, body { background: #f3f3f3; color: #111; overflow:hidden; }
-    body { font-family: avenir,'avenir next', helvetica, 'helvetica neue', arial, sans-serif!important; }
-    h1 { font-size: 1.5em; text-transform:uppercase; letter-spacing: 0.13em; }
-    img { max-width: 720px; border-radius: 8px;  box-shadow: 0 0 5px 2px rgba(0,0,0,.14) }
+    html, body { background: #f3f3f3; color: #111; overflow: hidden; }
+    body { font-family: avenir, 'avenir next', helvetica, 'helvetica neue', arial, sans-serif !important; }
+    h1 { font-size: 1.5em; text-transform: uppercase; letter-spacing: 0.13em; }
+    img { max-width: 720px; border-radius: 8px; box-shadow: 0 0 5px 2px rgba(0,0,0,.14); }
     svg { max-width: 100%; }
-    @-webkit-keyframes fadein {
-      from { -webkit-transform: scale(.5); opacity: 0; }
-        to {  -webkit-transform: scale(1); opacity: 1; }
-    }
+
     @keyframes fadein {
       from { transform: scale(.5); opacity: 0; }
-        to { transform: scale(1); opacity: 1; }
+      to   { transform: scale(1); opacity: 1; }
     }
     .anim-fade-in {
-      -webkit-animation-name: fadein;
-      -webkit-animation-timing-function: ease-in;
-      -webkit-animation-fill-mode: forwards;
       animation-name: fadein;
       animation-timing-function: ease-in;
       animation-fill-mode: forwards;
     }
     .anim-slow {
-      -webkit-animation-duration: 8s;
       animation-duration: 8s;
     }
-    .pointer { cursor: pointer }
+    .pointer { cursor: pointer; }
+    .hidden { display: none; }
   </style>
-  <!--  <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,600" rel="stylesheet">-->
-
-  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.min.js"></script>
-  <script src="plangular.js"></script>
 </head>
-<body ng-app="plangular" plangular data-src="https://soundcloud.com/jxnblk/american-party">
+<body>
+
   <div class="min-h100 mobile-table center">
     <div class="mobile-table-cell">
-      <h1 class="h0 anim-fade-in anim-slow"
-        ng-if="player.playing && currentTime > 12000 && currentTime < 19200">Gifolio</h1>
-      <div class="anim-fade-in anim-slow"
-        ng-if="player.playing && currentTime > 0 && currentTime < 12000" >
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="512" height="512">
-  <path fill="#333" d=" M2 0 C4 0 10 5 10 5 C13 4 15 4 16 4 C17 4 18 4 22 5 C22 5 28 0 30 0 C31 0 32 10 32 16 C32 26 24 30 16 30 C8 30 0 26 0 16 C0 10 1 0 2 0 "/>
-  <path fill="#fff" d="M16 7 C13 7 2 9 2 16 C2 23 6 23 10 24 L11 28 L12 26 L20 26 L21 28 L22 24 C26 23 30 23 30 16 C30 9 19 7 16 7 M4 18 A4 4 0 0 1 12 18 A4 4 0 0 1 4 18 M20 18 A4 4 0 0 1 28 18 A4 4 0 0 1 20 18 "/>
-</svg>
+
+      <!-- Shown when playing, 0–12s -->
+      <div id="scene-skull" class="anim-fade-in anim-slow hidden">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="512" height="512">
+          <path fill="#000" d="M16 7 C13 7 2 9 2 16 C2 23 6 23 10 24 L11 28 L12 26 L20 26 L21 28 L22 24 C26 23 30 23 30 16 C30 9 19 7 16 7 M4 18 A4 4 0 0 1 12 18 A4 4 0 0 1 4 18 M20 18 A4 4 0 0 1 28 18 A4 4 0 0 1 20 18 "/>
+        </svg>
       </div>
-      <img ng-if="player.playing && currentTime > 20200" src="gifolio.gif" class="" style="width:100%;" />
-      <h1 ng-hide="player.playing" class="f6 fw4 f1-ns fw9-ns">Turn up the volume to 11 &amp; click</h1>
+
+      <!-- Shown when playing, 12–19.2s -->
+      <h1 id="scene-title" class="h0 anim-fade-in anim-slow hidden">Gifolio</h1>
+
+      <!-- Shown when playing, 20.2s+ -->
+      <img id="scene-gif" src="gifolio.gif" class="hidden" style="width:100%;" />
+
+      <!-- Shown when NOT playing -->
+      <h1 id="scene-prompt" class="f6 fw4 f1-ns fw9-ns">Turn up the volume to 11 &amp; click</h1>
+
     </div>
   </div>
-  <div class="absolute t0 r0 b0 l0 pointer" ng-hide="player.playing" ng-click="player.play(track)"></div>
-  <div class="absolute t0 r0 b0 l0 pointer" ng-hide="!player.playing" ng-click="player.pause()"></div>
-  <footer ng-hide="player.playing" class="pam absolute b0 r0 l0">
-  <div class="h5 leading-3 tc mid-gray">
-    <p class="dib">Built using <a href="http://jxnblk.github.io/plangular" title="plangular">plangular</a> and <a href="http://github.com/jxnblk/gitfolio/" title="gifolio by jxnblk">gifolio</a></p>
-    <a href="https://twitter.com/intent/tweet?text=Gifolio:&url=http://mrmrs.io/gifolio&via=mrmrs_" target="_blank" class="button button-small button-box-white" style="font-weight: 400; border-color: #fff; " >
-      <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-        <path fill="#00CCFF" d="M2 4 C6 8 10 12 15 11 A6 6 0 0 1 22 4 A6 6 0 0 1 26 6 A8 8 0 0 0 31 4 A8 8 0 0 1 28 8 A8 8 0 0 0 32 7 A8 8 0 0 1 28 11 A18 18 0 0 1 10 30 A18 18 0 0 1 0 27 A12 12 0 0 0 8 24 A8 8 0 0 1 3 20 A8 8 0 0 0 6 19.5 A8 8 0 0 1 0 12 A8 8 0 0 0 3 13 A8 8 0 0 1 2 4"/>
-      </svg>
-      Tweet
-    </a>
-    <p class="dib">Music by <a href="http://microbeats.cc" title="Music by jxnblk">Jxnblk</a></p>
-  </div>
+
+  <!-- Click overlay to play/pause -->
+  <div id="overlay" class="absolute t0 r0 b0 l0 pointer"></div>
+
+  <footer id="footer" class="pam absolute b0 r0 l0">
+    <div class="leading-3 tc mid-gray" style='text-transform: uppercase; letter-spacing: 0.15em; font-size: 10px;'>
+      <p class="dib" style='font-size: 12px;' >Music by <a href="http://microbeats.cc" title="Music by jxnblk">Jxnblk</a></p>
+    </div>
   </footer>
-<script> (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,'script','//www.google-analytics.com/analytics.js','ga'); ga('create', 'UA-52095955-1', 'mrmrs.io'); ga('send', 'pageview'); </script>
+
+  <script>
+    (function () {
+      // ── Point this at any hosted mp3 ──
+      var AUDIO_SRC = 'https://microbeats.s3.amazonaws.com/american-party.mp3';
+
+      var audio = new Audio(AUDIO_SRC);
+      audio.preload = 'auto';
+
+      var playing = false;
+
+      // DOM refs
+      var sceneSkull  = document.getElementById('scene-skull');
+      var sceneTitle  = document.getElementById('scene-title');
+      var sceneGif    = document.getElementById('scene-gif');
+      var scenePrompt = document.getElementById('scene-prompt');
+      var overlay     = document.getElementById('overlay');
+      var footer      = document.getElementById('footer');
+
+      function hideAll() {
+        sceneSkull.classList.add('hidden');
+        sceneTitle.classList.add('hidden');
+        sceneGif.classList.add('hidden');
+        scenePrompt.classList.add('hidden');
+      }
+
+      function showPrompt() {
+        hideAll();
+        scenePrompt.classList.remove('hidden');
+        footer.classList.remove('hidden');
+      }
+
+      function updateScene() {
+        if (!playing) return;
+        var t = audio.currentTime;
+        hideAll();
+        footer.classList.add('hidden');
+
+        if (t < 12) {
+          sceneSkull.classList.remove('hidden');
+        } else if (t < 19.2) {
+          sceneTitle.classList.remove('hidden');
+        } else if (t >= 20.2) {
+          sceneGif.classList.remove('hidden');
+        }
+      }
+
+      // Play / pause on click
+      overlay.addEventListener('click', function () {
+        if (!playing) {
+          audio.play();
+        } else {
+          audio.pause();
+        }
+      });
+
+      audio.addEventListener('play', function () {
+        playing = true;
+        updateScene();
+      });
+
+      audio.addEventListener('pause', function () {
+        playing = false;
+        showPrompt();
+      });
+
+      audio.addEventListener('ended', function () {
+        playing = false;
+        showPrompt();
+      });
+
+      audio.addEventListener('timeupdate', updateScene);
+
+      // Initial state
+      showPrompt();
+    })();
+  </script>
+
 </body>
 </html>
